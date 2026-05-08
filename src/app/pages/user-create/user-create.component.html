@@ -1,0 +1,86 @@
+<div class="user-form-container">
+  <h2>ユーザー追加</h2>
+
+  @if (state().createErrorMessage) {
+    <div class="error-message">
+      <h3>追加エラー:</h3>
+      <p>{{ state().createErrorMessage }}</p>
+    </div>
+  }
+
+  <form [formGroup]="userForm" (ngSubmit)="submit()" class="user-form">
+    <div class="form-group">
+      <label for="name">名前:</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="form-control"
+        [class.error]="userForm.get('name')?.invalid && userForm.get('name')?.touched"
+      />
+      @if (userForm.get('name')?.invalid && userForm.get('name')?.touched) {
+        <div class="error-text">名前は必須です</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="email">メールアドレス:</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        class="form-control"
+        [class.error]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+      />
+      @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+        <div class="error-text">
+          @if (userForm.get('email')?.hasError('required')) {
+            <span>メールアドレスは必須です</span>
+          }
+          @if (userForm.get('email')?.hasError('email')) {
+            <span>正しいメールアドレス形式で入力してください</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">電話番号:</label>
+      <input
+        type="tel"
+        id="phoneNumber"
+        formControlName="phoneNumber"
+        class="form-control"
+        [class.error]="userForm.get('phoneNumber')?.invalid && userForm.get('phoneNumber')?.touched"
+      />
+      @if (userForm.get('phoneNumber')?.invalid && userForm.get('phoneNumber')?.touched) {
+        <div class="error-text">電話番号は必須です</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="address">住所:</label>
+      <input
+        type="text"
+        id="address"
+        formControlName="address"
+        class="form-control"
+        [class.error]="userForm.get('address')?.invalid && userForm.get('address')?.touched"
+      />
+      @if (userForm.get('address')?.invalid && userForm.get('address')?.touched) {
+        <div class="error-text">住所は必須です</div>
+      }
+    </div>
+
+    <div class="form-actions">
+      <a routerLink="/users" class="btn btn-secondary">キャンセル</a>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="state().loading || userForm.invalid"
+      >
+        {{ state().loading ? '追加中...' : '追加' }}
+      </button>
+    </div>
+  </form>
+</div>

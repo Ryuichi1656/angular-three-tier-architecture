@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import { profileRouter } from './routes/profile';
+import { userRouter } from './routes/user';
 
 const PORT = Number(process.env['PORT'] ?? 63000);
 const FRONTEND_ORIGIN = process.env['FRONTEND_ORIGIN'] ?? 'http://localhost:14200';
@@ -10,7 +10,7 @@ const app = express();
 app.use(cors({ origin: FRONTEND_ORIGIN }));
 app.use(express.json());
 
-app.use('/api', profileRouter);
+app.use('/api', userRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });

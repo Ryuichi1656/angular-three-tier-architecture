@@ -1,4 +1,4 @@
-export interface Profile {
+export interface User {
   id: number;
   name: string;
   email: string;
@@ -6,7 +6,7 @@ export interface Profile {
   address: string;
 }
 
-const profiles = new Map<number, Profile>([
+const users = new Map<number, User>([
   [
     1,
     {
@@ -39,12 +39,23 @@ const profiles = new Map<number, Profile>([
   ],
 ]);
 
-export function findProfileById(id: number): Profile | null {
-  return profiles.get(id) ?? null;
+export function findUserById(id: number): User | null {
+  return users.get(id) ?? null;
 }
 
-export function updateProfile(profile: Profile): Profile | null {
-  if (!profiles.has(profile.id)) return null;
-  profiles.set(profile.id, profile);
-  return profile;
+export function updateUser(user: User): User | null {
+  if (!users.has(user.id)) return null;
+  users.set(user.id, user);
+  return user;
+}
+
+export function listUsers(): User[] {
+  return Array.from(users.values());
+}
+
+export function createUser(params: Omit<User, 'id'>): User {
+  const nextId = Math.max(0, ...users.keys()) + 1;
+  const user: User = { id: nextId, ...params };
+  users.set(nextId, user);
+  return user;
 }

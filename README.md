@@ -1,59 +1,89 @@
-# AngularThreeTierArchitecture
+# angular-three-tier-architecture
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.9.
+Angular における 3 層アーキテクチャ（Component / Usecase / API Service）を素振りするためのリポジトリ。動作確認用に Express ベースの簡易バックエンドも同梱している。
 
-## Development server
+## 必要環境
 
-To start a local development server, run:
+- Node.js 24.15.0（[mise.toml](./mise.toml) で固定）
+- npm 11.12.1（package.json の `packageManager` で固定）
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:14200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## セットアップ
 
 ```bash
-ng generate component component-name
+npm ci
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 開発
+
+フロントエンドとバックエンドをまとめて起動する。
 
 ```bash
-ng generate --help
+npm run dev
 ```
 
-## Building
+- フロントエンド: <http://localhost:14200>
+- バックエンド: <http://localhost:63000>
 
-To build the project run:
+個別に起動する場合は `npm start`（フロントエンド）/ `npm run start:backend`（バックエンド）。
 
-```bash
-ng build
+## npm scripts
+
+| script | 内容 |
+| --- | --- |
+| `npm run dev` | フロントエンド + バックエンドを同時起動（concurrently） |
+| `npm start` | フロントエンドのみ（`ng serve --port 14200`） |
+| `npm run start:backend` | バックエンドのみ（`tsx watch`） |
+| `npm run build` | フロントエンドの本番ビルド |
+| `npm run build:backend` | バックエンドの型チェック / コンパイル |
+| `npm test` | Vitest で単体テストを実行 |
+| `npm run lint` | ESLint（angular-eslint）でコードを検証 |
+
+## ディレクトリ構成
+
+```
+src/app/
+├── apis/                          # データアクセス層（HTTP 通信・型変換）
+│   ├── user.ts                    # フロントエンド共通の User 型（camelCase）
+│   ├── list-users-api.service.ts
+│   ├── fetch-user-api.service.ts
+│   ├── create-user-api.service.ts
+│   └── update-user-api.service.ts
+├── pages/                         # ページ単位で Component + Usecase をペア化
+│   ├── user-list/                 # 一覧（signal 完結型）
+│   ├── user-detail/               # 詳細（signal 完結型）
+│   ├── user-create/               # 追加（Observable 返却型）
+│   └── user-edit/                 # 編集（Observable 返却型）
+├── app.config.ts                  # provideHttpClient / provideRouter
+├── app.routes.ts                  # /users, /users/new, /users/:id, /users/:id/edit
+└── app.{ts,html,css}              # ルートコンポーネント
+
+backend/src/
+├── data/users.ts                  # in-memory のユーザー保管庫
+├── routes/user.ts                 # /api/{list_users,fetch_user,create_user,update_user}
+└── server.ts                      # Express エントリポイント
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 実装済み機能
 
-## Running unit tests
+User の CRUD のうち削除を除く 4 ページ。
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+| ルート | コンポーネント | 役割 |
+| --- | --- | --- |
+| `/users` | `UserListComponent` | ユーザー一覧。各行クリックで詳細に遷移 |
+| `/users/new` | `UserCreateComponent` | フォームで追加。成功時に詳細へ遷移 |
+| `/users/:id` | `UserDetailComponent` | ユーザー詳細。編集 / 一覧へのリンク |
+| `/users/:id/edit` | `UserEditComponent` | フォームで編集。成功時に詳細へ遷移 |
 
-```bash
-ng test
-```
+## バックエンド API
 
-## Running end-to-end tests
+ベース URL: `http://localhost:63000/api`
 
-For end-to-end (e2e) testing, run:
+| メソッド | パス | 用途 |
+| --- | --- | --- |
+| `GET` | `/list_users/` | ユーザー一覧取得 |
+| `GET` | `/fetch_user/?id=:id` | ユーザー 1 件取得 |
+| `POST` | `/create_user/` | ユーザー作成（id を返す） |
+| `PUT` | `/update_user/` | ユーザー更新 |
+| `GET` | `/health` | ヘルスチェック |
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+レスポンス / リクエストは snake_case。フロントエンドへの camelCase 変換は API Service 内で行う（[tmp/three-tier-architecture.md](./tmp/three-tier-architecture.md) 参照）。

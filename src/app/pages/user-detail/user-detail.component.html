@@ -1,0 +1,44 @@
+<div class="user-detail-container">
+  <h2>ユーザー詳細</h2>
+
+  @if (state().loading) {
+    <p class="loading">読み込み中...</p>
+  }
+
+  @if (state().fetchErrorMessage) {
+    <div class="error-message">
+      <h3>取得エラー:</h3>
+      <p>{{ state().fetchErrorMessage }}</p>
+    </div>
+  }
+
+  @if (state().user; as user) {
+    <dl class="profile-card">
+      <div class="profile-item">
+        <dt>ID:</dt>
+        <dd>{{ user.id }}</dd>
+      </div>
+      <div class="profile-item">
+        <dt>名前:</dt>
+        <dd>{{ user.name }}</dd>
+      </div>
+      <div class="profile-item">
+        <dt>メールアドレス:</dt>
+        <dd>{{ user.email }}</dd>
+      </div>
+      <div class="profile-item">
+        <dt>電話番号:</dt>
+        <dd>{{ user.phoneNumber }}</dd>
+      </div>
+      <div class="profile-item">
+        <dt>住所:</dt>
+        <dd>{{ user.address }}</dd>
+      </div>
+    </dl>
+
+    <div class="actions">
+      <a routerLink="/users" class="btn btn-secondary">一覧に戻る</a>
+      <a [routerLink]="['/users', user.id, 'edit']" class="btn btn-primary">編集する</a>
+    </div>
+  }
+</div>

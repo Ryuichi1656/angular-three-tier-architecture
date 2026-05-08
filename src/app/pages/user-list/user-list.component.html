@@ -1,0 +1,46 @@
+<div class="user-list-container">
+  <div class="header">
+    <h2>ユーザー一覧</h2>
+    <a routerLink="/users/new" class="btn btn-primary">新規追加</a>
+  </div>
+
+  @if (state().loading) {
+    <p class="loading">読み込み中...</p>
+  }
+
+  @if (state().fetchErrorMessage) {
+    <div class="error-message">
+      <h3>取得エラー:</h3>
+      <p>{{ state().fetchErrorMessage }}</p>
+    </div>
+  }
+
+  @if (!state().loading && !state().fetchErrorMessage) {
+    @if (state().users.length === 0) {
+      <p class="empty">ユーザーが登録されていません</p>
+    } @else {
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>名前</th>
+            <th>メールアドレス</th>
+            <th>電話番号</th>
+            <th>住所</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of state().users; track user.id) {
+            <tr [routerLink]="['/users', user.id]" class="user-row">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phoneNumber }}</td>
+              <td>{{ user.address }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>
