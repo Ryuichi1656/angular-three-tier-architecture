@@ -28,15 +28,15 @@ npm run dev
 
 ## npm scripts
 
-| script | 内容 |
-| --- | --- |
-| `npm run dev` | フロントエンド + バックエンドを同時起動（concurrently） |
-| `npm start` | フロントエンドのみ（`ng serve --port 14200`） |
-| `npm run start:backend` | バックエンドのみ（`tsx watch`） |
-| `npm run build` | フロントエンドの本番ビルド |
-| `npm run build:backend` | バックエンドの型チェック / コンパイル |
-| `npm test` | Vitest で単体テストを実行 |
-| `npm run lint` | ESLint（angular-eslint）でコードを検証 |
+| script                  | 内容                                                    |
+| ----------------------- | ------------------------------------------------------- |
+| `npm run dev`           | フロントエンド + バックエンドを同時起動（concurrently） |
+| `npm start`             | フロントエンドのみ（`ng serve --port 14200`）           |
+| `npm run start:backend` | バックエンドのみ（`tsx watch`）                         |
+| `npm run build`         | フロントエンドの本番ビルド                              |
+| `npm run build:backend` | バックエンドの型チェック / コンパイル                   |
+| `npm test`              | Vitest で単体テストを実行                               |
+| `npm run lint`          | ESLint（angular-eslint）でコードを検証                  |
 
 ## ディレクトリ構成
 
@@ -67,23 +67,23 @@ backend/src/
 
 User の CRUD のうち削除を除く 4 ページ。
 
-| ルート | コンポーネント | 役割 |
-| --- | --- | --- |
-| `/users` | `UserListComponent` | ユーザー一覧。各行クリックで詳細に遷移 |
-| `/users/new` | `UserCreateComponent` | フォームで追加。成功時に詳細へ遷移 |
-| `/users/:id` | `UserDetailComponent` | ユーザー詳細。編集 / 一覧へのリンク |
-| `/users/:id/edit` | `UserEditComponent` | フォームで編集。成功時に詳細へ遷移 |
+| ルート            | コンポーネント        | 役割                                   |
+| ----------------- | --------------------- | -------------------------------------- |
+| `/users`          | `UserListComponent`   | ユーザー一覧。各行クリックで詳細に遷移 |
+| `/users/new`      | `UserCreateComponent` | フォームで追加。成功時に詳細へ遷移     |
+| `/users/:id`      | `UserDetailComponent` | ユーザー詳細。編集 / 一覧へのリンク    |
+| `/users/:id/edit` | `UserEditComponent`   | フォームで編集。成功時に詳細へ遷移     |
 
 ## バックエンド API
 
 ベース URL: `http://localhost:63000/api`
 
-| メソッド | パス | 用途 |
-| --- | --- | --- |
-| `GET` | `/list_users/` | ユーザー一覧取得 |
-| `GET` | `/fetch_user/?id=:id` | ユーザー 1 件取得 |
-| `POST` | `/create_user/` | ユーザー作成（id を返す） |
-| `PUT` | `/update_user/` | ユーザー更新 |
-| `GET` | `/health` | ヘルスチェック |
+| メソッド | パス                  | 用途                      |
+| -------- | --------------------- | ------------------------- |
+| `GET`    | `/list_users/`        | ユーザー一覧取得          |
+| `GET`    | `/fetch_user/?id=:id` | ユーザー 1 件取得         |
+| `POST`   | `/create_user/`       | ユーザー作成（id を返す） |
+| `PUT`    | `/update_user/`       | ユーザー更新              |
+| `GET`    | `/health`             | ヘルスチェック            |
 
-レスポンス / リクエストは snake_case。フロントエンドへの camelCase 変換は API Service 内で行う（[tmp/three-tier-architecture.md](./tmp/three-tier-architecture.md) 参照）。
+レスポンス / リクエストは snake_case。フロントエンドへの camelCase 変換は API Service 内で行う。
