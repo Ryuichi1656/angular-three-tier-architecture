@@ -55,7 +55,7 @@ describe('UserEditUsecase', () => {
     };
   }
 
-  it('初期状態は user=null・loading=false・各 errorMessage=null', () => {
+  it('初期状態は user=null・loading=false・各エラー=null・canSubmit=false', () => {
     const { usecase } = setup({});
 
     expect(usecase.state()).toEqual({
@@ -63,6 +63,8 @@ describe('UserEditUsecase', () => {
       loading: false,
       fetchErrorMessage: null,
       updateErrorMessage: null,
+      canSubmit: false,
+      errorMessage: null,
     });
   });
 
@@ -81,6 +83,9 @@ describe('UserEditUsecase', () => {
     expect(usecase.state().user).toEqual(dummyUser);
     expect(usecase.state().loading).toBe(false);
     expect(usecase.state().fetchErrorMessage).toBeNull();
+    // 派生状態：user が取得できかつ loading=false なので canSubmit=true
+    expect(usecase.state().canSubmit).toBe(true);
+    expect(usecase.state().errorMessage).toBeNull();
   });
 
   it('fetchUser 失敗時は fetchErrorMessage が設定され、Observable は error を流す', () => {
@@ -98,6 +103,9 @@ describe('UserEditUsecase', () => {
     expect(receivedError?.message).toBe('Server Error: 404');
     expect(usecase.state().user).toBeNull();
     expect(usecase.state().fetchErrorMessage).toBe('Server Error: 404');
+    // 派生状態：fetchErrorMessage が errorMessage にフォールスルー
+    expect(usecase.state().errorMessage).toBe('Server Error: 404');
+    expect(usecase.state().canSubmit).toBe(false);
   });
 
   it('updateUser 成功時は loading=false に戻り、戻り値の Observable で id を受け取れる', () => {
@@ -133,5 +141,7 @@ describe('UserEditUsecase', () => {
     expect(receivedError?.message).toBe('Server Error: 500');
     expect(usecase.state().loading).toBe(false);
     expect(usecase.state().updateErrorMessage).toBe('Server Error: 500');
+    // 派生状態：fetchErrorMessage が null なら updateErrorMessage が errorMessage になる
+    expect(usecase.state().errorMessage).toBe('Server Error: 500');
   });
 });

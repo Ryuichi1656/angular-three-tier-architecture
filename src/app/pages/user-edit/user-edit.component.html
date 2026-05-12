@@ -5,17 +5,10 @@
     <p class="loading">読み込み中...</p>
   }
 
-  @if (state().fetchErrorMessage) {
+  @if (state().errorMessage; as msg) {
     <div class="error-message">
-      <h3>取得エラー:</h3>
-      <p>{{ state().fetchErrorMessage }}</p>
-    </div>
-  }
-
-  @if (state().updateErrorMessage) {
-    <div class="error-message">
-      <h3>更新エラー:</h3>
-      <p>{{ state().updateErrorMessage }}</p>
+      <h3>エラー:</h3>
+      <p>{{ msg }}</p>
     </div>
   }
 
@@ -96,7 +89,7 @@
         <button
           type="submit"
           class="btn btn-primary"
-          [disabled]="state().loading || userForm.invalid"
+          [disabled]="!state().canSubmit || userForm.invalid"
         >
           {{ state().loading ? '保存中...' : '保存' }}
         </button>

@@ -14,6 +14,8 @@ export interface UserEditState {
   loading: boolean;
   fetchErrorMessage: string | null;
   updateErrorMessage: string | null;
+  canSubmit: boolean;
+  errorMessage: string | null;
 }
 
 @Injectable()
@@ -27,11 +29,21 @@ export class UserEditUsecase {
   private readonly fetchErrorMessage = signal<string | null>(null);
   private readonly updateErrorMessage = signal<string | null>(null);
 
+  // 派生状態は signal を増やすのではなく computed で導出する
+  private readonly canSubmit = computed<boolean>(
+    () => !this.loading() && this.user() !== null,
+  );
+  private readonly errorMessage = computed<string | null>(
+    () => this.fetchErrorMessage() ?? this.updateErrorMessage(),
+  );
+
   readonly state = computed<UserEditState>(() => ({
     user: this.user(),
     loading: this.loading(),
     fetchErrorMessage: this.fetchErrorMessage(),
     updateErrorMessage: this.updateErrorMessage(),
+    canSubmit: this.canSubmit(),
+    errorMessage: this.errorMessage(),
   }));
 
   /**
