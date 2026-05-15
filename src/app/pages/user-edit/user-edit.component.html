@@ -15,7 +15,7 @@
   @if (state().user; as user) {
     <form [formGroup]="userForm" (ngSubmit)="submit()" class="user-form">
       <div class="form-group">
-        <label for="id">ID:</label>
+        <span class="field-name">ID:</span>
         <span class="readonly">{{ user.id }}</span>
       </div>
 

@@ -17,7 +17,8 @@
   flex-direction: column;
 }
 
-.form-group label {
+.form-group label,
+.form-group .field-name {
   font-weight: 600;
   margin-bottom: 0.25rem;
   color: #374151;
