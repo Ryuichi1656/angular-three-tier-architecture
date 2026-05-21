@@ -108,10 +108,13 @@ describe('UserEditUsecase', () => {
     expect(usecase.state().canSubmit).toBe(false);
   });
 
-  it('updateUser 成功時は loading=false に戻り、戻り値の Observable で id を受け取れる', () => {
+  it('updateUser 成功時は user に params がマージされ、loading=false に戻り、戻り値の Observable で id を受け取れる', () => {
     const { usecase, updateUserAPIServiceStub } = setup({
       updateUser$: of({ id: 1 }),
     });
+
+    // 既に fetchUser 済みである前提で user を埋めておく
+    usecase.fetchUser(1).subscribe();
 
     let receivedId: number | undefined;
     usecase.updateUser(updateParams).subscribe({
@@ -122,8 +125,17 @@ describe('UserEditUsecase', () => {
 
     expect(updateUserAPIServiceStub.updateUser).toHaveBeenCalledWith(updateParams);
     expect(receivedId).toBe(1);
+    expect(usecase.state().user).toEqual({ ...dummyUser, ...updateParams });
     expect(usecase.state().loading).toBe(false);
     expect(usecase.state().updateErrorMessage).toBeNull();
+  });
+
+  it('updateUser 成功時、user が null のままなら null を維持する', () => {
+    const { usecase } = setup({ updateUser$: of({ id: 1 }) });
+
+    usecase.updateUser(updateParams).subscribe();
+
+    expect(usecase.state().user).toBeNull();
   });
 
   it('updateUser 失敗時は updateErrorMessage が設定される', () => {

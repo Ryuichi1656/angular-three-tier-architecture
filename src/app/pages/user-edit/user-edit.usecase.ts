@@ -84,6 +84,7 @@ export class UserEditUsecase {
       takeUntilDestroyed(this.destroyRef),
       tap({
         next: () => {
+          this.user.update((current) => (current ? { ...current, ...params } : current));
           this.loading.set(false);
         },
         error: (error: Error) => {
